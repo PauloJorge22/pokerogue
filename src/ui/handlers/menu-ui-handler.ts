@@ -30,6 +30,7 @@ enum MenuOptions {
   MANAGE_DATA,
   COMMUNITY,
   SAVE_AND_QUIT,
+  RESTART_GAME,
   LOG_OUT,
 }
 
@@ -129,7 +130,7 @@ export class MenuUiHandler extends MessageUiHandler {
         options: [MenuOptions.EGG_GACHA],
       },
       { condition: bypassLogin, options: [MenuOptions.LOG_OUT] },
-      { condition: !globalScene.currentBattle, options: [MenuOptions.SAVE_AND_QUIT] },
+      { condition: !globalScene.currentBattle, options: [MenuOptions.SAVE_AND_QUIT, MenuOptions.RESTART_GAME] },
     ];
 
     this.menuOptions = getEnumValues(MenuOptions).filter(m => {
@@ -643,6 +644,16 @@ export class MenuUiHandler extends MessageUiHandler {
           ui.setOverlayMode(UiMode.MENU_OPTION_SELECT, this.communityConfig);
           success = true;
           break;
+        case MenuOptions.RESTART_GAME:
+          success = true;
+          console.log("👉 Botão RESTART_GAME foi clicado!");
+          // Mostra uma mensagem na caixa de diálogo do jogo só para testarmos
+          ui.showText("Work in progress: Restarting with same team...", null, () => {
+            this.showText("", 0); // Limpa o texto após clicar
+            ui.revertMode(); // Fecha o menu e volta ao jogo
+          });
+          break;
+
         case MenuOptions.SAVE_AND_QUIT: {
           success = true;
           const doSaveQuit = () => {
